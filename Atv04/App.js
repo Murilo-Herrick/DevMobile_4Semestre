@@ -18,6 +18,7 @@ export default function App() {
       if (Array.isArray(result.data.message)) {
         setDogs(result.data.message);
       } else {
+        // @ts-ignore
         setDogs([result.data.message]);
       }
     } catch (error) {
