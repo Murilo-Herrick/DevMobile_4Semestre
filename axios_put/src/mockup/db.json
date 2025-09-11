@@ -1,0 +1,29 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Murilo",
+      "email": "muriloherrick@gmail.com"
+    },
+    {
+      "id": "2",
+      "name": "Alice",
+      "email": "alice@gmail.com"
+    },
+    {
+      "id": "fa5c",
+      "name": "Gaban",
+      "email": "Gaban@gmail.com"
+    },
+    {
+      "id": "b43b",
+      "name": "Nicolas",
+      "email": "Nicolas@gmail.com"
+    },
+    {
+      "id": "74f3",
+      "name": "Ramos",
+      "email": "Ramos@gmail.com "
+    }
+  ]
+}
