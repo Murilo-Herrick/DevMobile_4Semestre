@@ -9,3 +9,6 @@ Para executar o mockup:
 
 3. E em seguida execute o comando: 
 - npx json-server db.json --port 3000 
+
+# Baixar node_modules (Dependencias)
+- npm install
