@@ -14,7 +14,7 @@ export default function App() {
       setLoading(true); // Ativa o indicador de carregamento
 
       // Faz a requisição GET ao json-server      
-      const response = await fetch("http://10.110.12.17:3000/users");
+      const response = await fetch("http://10.110.12.17:3000/users", { method: "GET" });
 
       // Converte a resposta em JSON
       const data = await response.json();
@@ -50,7 +50,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    marginTop: 80,
+    padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -58,5 +59,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginTop: 20,
+    marginBottom: 20,
   },
 });

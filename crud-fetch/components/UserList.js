@@ -37,7 +37,7 @@ export default function UserList({ users, onUserChanged }) {
     return (
         <View>
             {
-                users.map((u) => {
+                users.map((u) => (
                     <View key={u.id} style={styles.card}>
                         <Text style={styles.text}>{u.name} - {u.email}</Text>
                         <View style={styles.buttons}>
@@ -45,7 +45,7 @@ export default function UserList({ users, onUserChanged }) {
                             <Button title="Deletar" onPress={() => deleteUser(u.id)}></Button>
                         </View>
                     </View>
-                })
+                ))
             }
         </View >
     )
@@ -57,10 +57,11 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         backgroundColor: "#f2f2f2",
         borderRadius: 5,
+        marginTop: 10,
     },
     text: {
         fontSize: 16,
-        marginBottom: 5
+        marginBottom: 10
     },
     buttons: {
         flexDirection: "row",
