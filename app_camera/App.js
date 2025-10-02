@@ -50,27 +50,62 @@ export default function App() {
 
   if (capturedPhoto) {
     return (
-      <View>
-        <View>
+      <View style={styles.container}>
+        <View style={styles.tirar_outra}>
           <Button title='Tirar outra foto' onPress={() => setCapturedPhoto(null)} />
         </View>
-        <Image source={{ uri = capturedPhoto.uri }} style={styles.preview} />
+        <Image source={{ uri: capturedPhoto.uri }} style={styles.preview} />
       </View>
     )
   }
 
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
+      <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+            <Text style={styles.text}>Virar Camera</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={takePicture}>
+            <Text style={styles.text}>Tirar Foto</Text>
+          </TouchableOpacity>
+        </View>
+      </CameraView>
+    </View >
   );
 }
 
 const styles = StyleSheet.create({
+  tirar_outra: {
+    marginTop: 60,
+    padding: 30
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+  },
+  camera: {
+    flex: 1
+  },
+  text: {
+    fontSize: 25,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 50,
+    marginBottom: 80
+  },
+  button: {
+    flex: 1,
+    alignSelf: 'flex-end',
+    alignItems: 'center'
+  },
+  preview: {
+    flex: 1,
+    resizeMode: 'center',
+    margin: 0
   },
 });
