@@ -1,111 +1,59 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity, Image } from 'react-native';
-import { CameraView, useCameraPermissions } from "expo-camera"
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Button } from 'react-native';
+import CameraScreen from './components/CameraScreen';
+import PhotoForm from './components/PhotoForm';
+import PhotoList from './components/PhotoList';
+import { salvarFotos, carregarFotos } from './services/storage';
 
 export default function App() {
-  // Define se a camera usada será a frontal "front" ou a traseira "back"
-  const [facing, setFacing] = useState('back');
-  // Hook do Expo para lidar com premissões da camera
-  // permission = estado da permissão
-  // requestPermission = Função para pedir permissão ao usuario
-  const [permission, requestPermission] = useCameraPermissions();
-  // Estado para guardar a foto capturada
-  const [capturedPhoto, setCapturedPhoto] = useState(null);
-  // Referencia para acessar os metodos da camera
-  const cameraRef = useRef(null);
+  const [fotos, setFotos] = useState([]);
+  const [addingPhoto, setAddingPhoto] = useState(false);
+  const [selectedPhotoUri, setSelectedPhotoUri] = useState(null);
+  const [editingPhoto, setEditingPhoto] = useState(null);
 
-  // useEffect para solicitar permissão de acesso á camera no momento que o App iniciar
-  useEffect(() => {
-    requestPermission();
-  });
+  const loadFotos = async () => {
+    const fotosCarregadas = await carregarFotos();
+    setFotos(fotosCarregadas);
+  };
 
-  // Caso o hook de permissão ainda não tenha dado retorno 
-  if (!permission) {
-    return <View />
+  useEffect(() => { loadFotos(); }, []);
+
+  const handleAdd = async (foto) => {
+    const novaLista = [...fotos, foto];
+    setFotos(novaLista);
+    await salvarFotos(novaLista);
+    setSelectedPhotoUri(null);
+    setAddingPhoto(false);
+  };
+
+  const handleEdit = async (fotoAtualizada) => {
+    const novaLista = fotos.map(f => f.uri === fotoAtualizada.uri ? fotoAtualizada : f);
+    setFotos(novaLista);
+    await salvarFotos(novaLista);
+    setEditingPhoto(null);
+  };
+
+  const handleDelete = async (uri) => {
+    const novaLista = fotos.filter(f => f.uri !== uri);
+    setFotos(novaLista);
+    await salvarFotos(novaLista);
+  };
+
+  if (addingPhoto) {
+    if (!selectedPhotoUri) return <CameraScreen onPhotoTaken={setSelectedPhotoUri} />;
+    return <PhotoForm onSubmit={handleAdd} initialData={{ uri: selectedPhotoUri }} />;
   }
 
-  // Caso o hook não tenha obitido permissão
-  if (!permission.granted) {
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>Precisso da sua permissão para acesso a camera</Text>
-        <Button title='Conceder Permissão' onPress={requestPermission} />
-      </View>
-    )
-  }
-
-  // Função para alterar entre camera frontal e traseira
-  function toggleCameraFacing() {
-    setFacing(current => (current === "back" ? "front" : "back"))
-  }
-
-  async function takePicture() {
-    if (cameraRef.current) {
-      // usa a referencia da camera para capturar a foto
-      const photo = await cameraRef.current.takePictureAsync();
-      setCapturedPhoto(photo);
-      console.log(photo.uri);
-    };
-  }
-
-  if (capturedPhoto) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.tirar_outra}>
-          <Button title='Tirar outra foto' onPress={() => setCapturedPhoto(null)} />
-        </View>
-        <Image source={{ uri: capturedPhoto.uri }} style={styles.preview} />
-      </View>
-    )
-  }
+  if (editingPhoto) return <PhotoForm onSubmit={handleEdit} initialData={editingPhoto} />;
 
   return (
     <View style={styles.container}>
-      <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Virar Camera</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={takePicture}>
-            <Text style={styles.text}>Tirar Foto</Text>
-          </TouchableOpacity>
-        </View>
-      </CameraView>
-    </View >
+      <Button title="Tirar Nova Foto" onPress={() => setAddingPhoto(true)} />
+      {fotos.length > 0 && (
+        <PhotoList fotos={fotos} onDelete={handleDelete} onEdit={setEditingPhoto} />
+      )}
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  tirar_outra: {
-    marginTop: 60,
-    padding: 30
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  camera: {
-    flex: 1
-  },
-  text: {
-    fontSize: 25,
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    padding: 50,
-    marginBottom: 80
-  },
-  button: {
-    flex: 1,
-    alignSelf: 'flex-end',
-    alignItems: 'center'
-  },
-  preview: {
-    flex: 1,
-    resizeMode: 'center',
-    margin: 0
-  },
-});
+const styles = StyleSheet.create({ container: { flex: 1, padding: 10, marginTop: 50 } });

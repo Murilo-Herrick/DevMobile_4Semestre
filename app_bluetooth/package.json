@@ -1,5 +1,5 @@
 {
-  "name": "album_fotos",
+  "name": "app_bluetooth",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -9,12 +9,12 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^2.2.0",
     "expo": "~54.0.12",
-    "expo-camera": "^17.0.8",
+    "expo-build-properties": "^1.0.9",
     "expo-status-bar": "~3.0.8",
     "react": "19.1.0",
-    "react-native": "0.81.4"
+    "react-native": "0.81.4",
+    "react-native-ble-plx": "^3.5.0"
   },
   "private": true
 }
