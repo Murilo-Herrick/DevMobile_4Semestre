@@ -20,10 +20,36 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUE_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.BLUETOOTH_ADMIN"
+      ],
+      "package": "com.muriloherrick.app_bluetooth"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": true,
+          "modes": [
+            "peripheral",
+            "central"
+          ],
+          "bluetoothAlwaysPermission": "Permitir que ${PRODUCT_NAME acesse o Bluetooth}",
+          "bluetoothPeripheralPermission": "Permitir que ${PRODUCT_NAME} se conecte!"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f8183d52-9efc-481f-8dd6-31ddf3f60897"
+      }
     }
   }
 }
